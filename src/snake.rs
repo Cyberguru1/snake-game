@@ -1,6 +1,6 @@
-use std::collections::LinkedList;
-use piston_window::{Context, G2d};
 use piston_window::types::Color;
+use piston_window::{Context, G2d};
+use std::collections::LinkedList;
 
 use crate::draw::draw_block;
 
@@ -11,7 +11,7 @@ pub enum Direction {
     Up,
     Down,
     Left,
-    Right
+    Right,
 }
 
 impl Direction {
@@ -20,30 +20,29 @@ impl Direction {
             Direction::Up => Direction::Down,
             Direction::Down => Direction::Up,
             Direction::Left => Direction::Right,
-            Direction::Right => Direction::Left
+            Direction::Right => Direction::Left,
         }
     }
 }
 
 #[derive(Debug, Clone)]
-struct Block  {
+struct Block {
     x: i32,
-    y: i32
+    y: i32,
 }
 
 pub struct Snake {
     direction: Direction,
     body: LinkedList<Block>,
-    tail: Option<Block>
+    tail: Option<Block>,
 }
 
-
 impl Snake {
-    pub fn new(x:i32, y: i32) -> Snake {
+    pub fn new(x: i32, y: i32) -> Snake {
         let mut body: LinkedList<Block> = LinkedList::new();
-        body.push_back(Block {x: x+2, y, });
-        body.push_back(Block {x: x+1, y, });
-        body.push_back(Block {x, y, });
+        body.push_back(Block { x: x + 2, y });
+        body.push_back(Block { x: x + 1, y });
+        body.push_back(Block { x, y });
 
         Snake {
             direction: Direction::Right,
@@ -52,7 +51,7 @@ impl Snake {
         }
     }
 
-    pub fn draw(&self, con:&Context, g: &mut G2d) {
+    pub fn draw(&self, con: &Context, g: &mut G2d) {
         for block in &self.body {
             draw_block(SNAKE_COLOR, block.x, block.y, con, g);
         }
@@ -71,16 +70,27 @@ impl Snake {
 
         let (last_x, last_y) = self.head_position();
         let new_block = match self.direction {
-            Direction::Up => Block {x: last_x, y: last_y - 1},
-            Direction::Down => Block {x: last_x, y: last_y + 1},
-            Direction::Left => Block {x: last_x - 1, y: last_y},
-            Direction::Right =>  Block {x: last_x + 1, y: last_y}
+            Direction::Up => Block {
+                x: last_x,
+                y: last_y - 1,
+            },
+            Direction::Down => Block {
+                x: last_x,
+                y: last_y + 1,
+            },
+            Direction::Left => Block {
+                x: last_x - 1,
+                y: last_y,
+            },
+            Direction::Right => Block {
+                x: last_x + 1,
+                y: last_y,
+            },
         };
 
         self.body.push_front(new_block);
         let removed_block = self.body.pop_back().unwrap();
         self.tail = Some(removed_block);
-
     }
 
     pub fn head_direction(&self) -> Direction {
@@ -99,7 +109,7 @@ impl Snake {
             Direction::Up => (head_x, head_y - 1),
             Direction::Down => (head_x, head_y + 1),
             Direction::Left => (head_x - 1, head_y),
-            Direction::Right => (head_x + 1, head_y)
+            Direction::Right => (head_x + 1, head_y),
         }
     }
 
@@ -112,7 +122,7 @@ impl Snake {
         let mut c = 0;
         for block in &self.body {
             if x == block.x && y == block.y {
-                return true
+                return true;
             }
 
             c += 1;
@@ -120,17 +130,6 @@ impl Snake {
                 break;
             }
         }
-        return false
+        return false;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
